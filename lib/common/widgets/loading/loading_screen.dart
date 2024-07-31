@@ -369,6 +369,8 @@ class LoadingScreen {
 
     overlayState.insert(overlay);
 
+    //overlay red line error
+
     return LoadingScreenController(
       close: () {
         textStream.close();
