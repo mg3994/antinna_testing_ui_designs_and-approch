@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    Loading.precacheAssets(context);
+    Loading.precacheAssets(context, 'assets/antinna.svg');
     super.initState();
   }
 
@@ -56,25 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
                 Future.delayed(Duration(seconds: 3), () {
                   controller?.update(
-                      widget: Expanded(
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.yellow),
-                        height: MediaQuery.of(context).size.height *
-                            0.8, //get it from diddepencechange
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  controller.close();
-                                },
-                                child: Text("Close")),
-                            Expanded(
-                                child: Center(child: Text("I am loading"))),
-                          ],
-                        )),
-                  ));
+                      widget: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.yellow),
+                          height: MediaQuery.of(context).size.height *
+                              0.4, //get it from diddepencechange
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    controller.close();
+                                  },
+                                  child: Text("Close")),
+                              Expanded(
+                                  child: Center(child: Text("I am loading"))),
+                            ],
+                          )));
                 });
 // Update the icon or text later:
                 Future.delayed(Duration(seconds: 6), () {

@@ -26,8 +26,9 @@ class Loading {
 
   Loading._();
 
-  static Future<void> precacheAssets(BuildContext context) async {
-    const loader = SvgAssetLoader('assets/antinna.svg');
+  static Future<void> precacheAssets(
+      BuildContext context, String iconPath) async {
+    final loader = SvgAssetLoader(iconPath);
     svg.cache
         .putIfAbsent(loader.cacheKey(context), () => loader.loadBytes(null));
     return;
@@ -81,7 +82,7 @@ class Loading {
 
     final overlay = OverlayEntry(builder: (context) {
       return Material(
-        color: Colors.black.withAlpha(150),
+        color: Colors.black.withAlpha(30),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -100,61 +101,65 @@ class Loading {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if (iconPath != null && iconPath != '') ...[
-                                StreamBuilder<String>(
-                                    stream: iconPathStream,
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<String> snapshot) {
-                                      if (snapshot.hasData &&
-                                          snapshot.data != '') {
-                                        return Container(
-                                          // decoration: const BoxDecoration(
-                                          //   shape: BoxShape.circle,
-                                          //   gradient: LinearGradient(
-                                          //     colors: [Colors.purple, Colors.pink],
-                                          //   ),
-                                          // ),
-                                          padding:
-                                              EdgeInsets.all(size.width * 0.02),
-                                          child: SvgPicture.asset(
-                                            snapshot.data ??
-                                                'assets/common/icon.svg',
-                                            semanticsLabel: 'Loading...',
-                                            width: size.width * 0.1,
-                                            matchTextDirection: true,
-                                            height: size.height * 0.1,
+                              StreamBuilder<String>(
+                                  stream: iconPathStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String> snapshot) {
+                                    if (snapshot.hasData &&
+                                        snapshot.data != '') {
+                                      return AnimatedContainer(
+                                        duration: Duration(milliseconds: 500),
+                                        // Duration for the gradient change
+                                        curve: Curves.bounceInOut,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.purple,
+                                              Colors.deepPurple
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
                                           ),
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }),
-                              ],
-                              if (text != null && text != '') ...[
-                                StreamBuilder<String>(
-                                    stream: textStream,
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<String> snapshot) {
-                                      if (snapshot.hasData &&
-                                          snapshot.data != '') {
-                                        return Text.rich(
-                                          TextSpan(
-                                              semanticsLabel: snapshot.data,
-                                              text: snapshot.data,
-                                              style: const TextStyle(
-                                                  color: Colors.purple,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle: FontStyle.italic)),
-                                          textAlign: TextAlign.center,
-                                        );
-                                      } else {
-                                        return Container();
-                                      }
-                                    }),
-                              ]
+                                        ),
+                                        padding:
+                                            EdgeInsets.all(size.width * 0.02),
+                                        child: SvgPicture.asset(
+                                          snapshot.data ??
+                                              'assets/common/icon.svg',
+                                          semanticsLabel: 'Loading...',
+                                          width: size.width * 0.1,
+                                          matchTextDirection: true,
+                                          height: size.height * 0.1,
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
+                              StreamBuilder<String>(
+                                  stream: textStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<String> snapshot) {
+                                    if (snapshot.hasData &&
+                                        snapshot.data != '') {
+                                      return Text.rich(
+                                        TextSpan(
+                                            semanticsLabel: snapshot.data,
+                                            text: snapshot.data,
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 102, 20, 102),
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle: FontStyle.italic)),
+                                        textAlign: TextAlign.center,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
                             ]);
                       }
                     })),
