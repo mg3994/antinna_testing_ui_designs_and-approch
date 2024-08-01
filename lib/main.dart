@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'common/widgets/loading/loading_screen.dart';
+
+import 'loading.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +26,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // LoadingScreenController? _controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    Loading.precacheAssets(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,28 +45,33 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                final controller = LoadingScreen.instance().show(
+                final controller = Loading().show(
                   context: context,
                   text: "Loading...",
                   iconPath:
                       'assets/antinna.svg', // Optional: Path to your SVG asset
-                  iconState: IconState
-                      .rotating, // Optional: Icon state, default is rotating
+                  // iconState: IconState
+                  //     .rotating, // Optional: Icon state, default is rotating
                 );
 
 // Update the icon or text later:
                 Future.delayed(Duration(seconds: 1), () {
-                  controller?.update("Still Loading...", '', IconState.still);
+                  controller?.update(
+                    "Still Loading...",
+                    'assets/antinna.svg',
+                  );
                 });
 // Or without changing the icon, just the text:
                 Future.delayed(Duration(seconds: 2), () {
                   controller?.update(
-                      "Almost done...", null, IconState.rotating);
+                    "Almost done...",
+                    null,
+                  );
                 });
 
                 // Hide the loading screen after some delay
                 Future.delayed(Duration(seconds: 4), () {
-                  LoadingScreen.instance().hide();
+                  Loading().hide();
                 });
               },
               child: Text('Show Loading Screen'),
