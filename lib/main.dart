@@ -48,31 +48,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 final controller = Loading().show(
                   context: context,
                   text: "Loading...",
-                  iconPath:
-                      'assets/antinna.svg', // Optional: Path to your SVG asset
+                  iconPath: 'assets/antinna.svg',
+                  // widget: Center(child: Text("I am loading"))
+                  // Optional: Path to your SVG asset
                   // iconState: IconState
                   //     .rotating, // Optional: Icon state, default is rotating
                 );
-
-// Update the icon or text later:
                 Future.delayed(Duration(seconds: 1), () {
                   controller?.update(
-                    "Still Loading...",
-                    'assets/antinna.svg',
+                      widget: Expanded(
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.yellow),
+                        height: MediaQuery.sizeOf(context).height *
+                            0.8, //get it from diddepencechange
+                        child: Expanded(
+                            child: Center(child: Text("I am loading")))),
+                  ));
+                });
+// Update the icon or text later:
+                Future.delayed(Duration(seconds: 6), () {
+                  controller?.update(
+                    text: "Still Loading...",
+                    iconPath: 'assets/antinna.svg',
                   );
                 });
 // Or without changing the icon, just the text:
-                Future.delayed(Duration(seconds: 2), () {
+                Future.delayed(Duration(seconds: 7), () {
                   controller?.update(
-                    "Almost done...",
-                    null,
+                    text: "Almost done...",
                   );
                 });
 
                 // Hide the loading screen after some delay
-                Future.delayed(Duration(seconds: 4), () {
+                Future.delayed(Duration(seconds: 10), () {
                   Loading().hide();
                 });
+                controller?.close;
               },
               child: Text('Show Loading Screen'),
             ),

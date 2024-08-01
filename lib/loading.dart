@@ -5,9 +5,7 @@ import 'package:rxdart/rxdart.dart';
 
 typedef CloseLoading = bool Function();
 typedef UpdateLoading = bool Function(
-  String text,
-  String? iconPath,
-);
+    {String? text, String? iconPath, Widget? widget});
 
 class LoadingController {
   final CloseLoading close;
@@ -44,12 +42,14 @@ class Loading {
 
   LoadingController? show({
     required BuildContext context,
-    required String text,
+    String? text,
     String? iconPath,
+    Widget? widget,
   }) {
     if (_controller?.update(
-          text,
-          iconPath,
+          text: text,
+          iconPath: iconPath,
+          widget: widget,
         ) ??
         false) {
       return _controller;
@@ -58,6 +58,7 @@ class Loading {
         context: context,
         text: text,
         iconPath: iconPath,
+        widget: widget,
       );
     }
     return _controller;
@@ -65,11 +66,14 @@ class Loading {
 
   LoadingController showOverlay({
     required BuildContext context,
-    required String text,
+    String? text,
     String? iconPath,
+    Widget? widget,
   }) {
-    final textStream = BehaviorSubject<String>.seeded(text);
+    final textStream = BehaviorSubject<String>.seeded(text ?? '');
     final iconPathStream = BehaviorSubject<String>.seeded(iconPath ?? '');
+    final widgetStream =
+        BehaviorSubject<Widget>.seeded(widget ?? SizedBox.shrink());
     final overlayState = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
@@ -81,60 +85,78 @@ class Loading {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (iconPath != null || iconPath != '') ...[
-                      StreamBuilder<String>(
-                          stream: iconPathStream,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            if (snapshot.hasData && snapshot.data != '') {
-                              return Container(
-                                // decoration: const BoxDecoration(
-                                //   shape: BoxShape.circle,
-                                //   gradient: LinearGradient(
-                                //     colors: [Colors.purple, Colors.pink],
-                                //   ),
-                                // ),
-                                padding: EdgeInsets.all(size.width * 0.02),
-                                child: SvgPicture.asset(
-                                  snapshot.data ?? 'assets/common/icon.svg',
-                                  semanticsLabel: 'Loading...',
-                                  width: size.width * 0.1,
-                                  matchTextDirection: true,
-                                  height: size.height * 0.1,
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
-                    ],
-                    StreamBuilder<String>(
-                        stream: textStream,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.hasData && snapshot.data != '') {
-                            return Text.rich(
-                              TextSpan(
-                                  semanticsLabel: snapshot.data,
-                                  text: snapshot.data,
-                                  style: const TextStyle(
-                                      color: Colors.red,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FontStyle.italic)),
-                              textAlign: TextAlign.center,
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                  ]),
-            ),
+                child: StreamBuilder<Widget>(
+                    stream: widgetStream,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.data != null &&
+                          snapshot.data.runtimeType !=
+                              const SizedBox.shrink().runtimeType) {
+                        return snapshot.data!;
+                      } else {
+                        return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (iconPath != null && iconPath != '') ...[
+                                StreamBuilder<String>(
+                                    stream: iconPathStream,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.hasData &&
+                                          snapshot.data != '') {
+                                        return Container(
+                                          // decoration: const BoxDecoration(
+                                          //   shape: BoxShape.circle,
+                                          //   gradient: LinearGradient(
+                                          //     colors: [Colors.purple, Colors.pink],
+                                          //   ),
+                                          // ),
+                                          padding:
+                                              EdgeInsets.all(size.width * 0.02),
+                                          child: SvgPicture.asset(
+                                            snapshot.data ??
+                                                'assets/common/icon.svg',
+                                            semanticsLabel: 'Loading...',
+                                            width: size.width * 0.1,
+                                            matchTextDirection: true,
+                                            height: size.height * 0.1,
+                                          ),
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                              ],
+                              if (text != null && text != '') ...[
+                                StreamBuilder<String>(
+                                    stream: textStream,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.hasData &&
+                                          snapshot.data != '') {
+                                        return Text.rich(
+                                          TextSpan(
+                                              semanticsLabel: snapshot.data,
+                                              text: snapshot.data,
+                                              style: const TextStyle(
+                                                  color: Colors.purple,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontStyle: FontStyle.italic)),
+                                          textAlign: TextAlign.center,
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                              ]
+                            ]);
+                      }
+                    })),
           ),
         ),
       );
@@ -144,15 +166,14 @@ class Loading {
       close: () {
         textStream.close();
         iconPathStream.close();
+        widgetStream.close();
         overlay.remove();
         return true;
       },
-      update: (
-        text,
-        iconPath,
-      ) {
-        textStream.add(text);
+      update: ({text, iconPath, widget}) {
+        textStream.add(text ?? '');
         iconPathStream.add(iconPath ?? '');
+        widgetStream.add(widget ?? const SizedBox.shrink());
         return true;
       },
     );
