@@ -73,7 +73,7 @@ class Loading {
     final textStream = BehaviorSubject<String>.seeded(text ?? '');
     final iconPathStream = BehaviorSubject<String>.seeded(iconPath ?? '');
     final widgetStream =
-        BehaviorSubject<Widget>.seeded(widget ?? SizedBox.shrink());
+        BehaviorSubject<Widget>.seeded(widget ?? const SizedBox.shrink());
     final overlayState = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
