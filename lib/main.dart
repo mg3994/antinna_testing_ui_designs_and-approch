@@ -61,10 +61,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                             color: Colors.yellow),
-                        height: MediaQuery.sizeOf(context).height *
+                        height: MediaQuery.of(context).size.height *
                             0.8, //get it from diddepencechange
-                        child: Expanded(
-                            child: Center(child: Text("I am loading")))),
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  controller.close();
+                                },
+                                child: Text("Close")),
+                            Expanded(
+                                child: Center(child: Text("I am loading"))),
+                          ],
+                        )),
                   ));
                 });
 // Update the icon or text later:

@@ -75,6 +75,7 @@ class Loading {
     final widgetStream =
         BehaviorSubject<Widget>.seeded(widget ?? const SizedBox.shrink());
     final overlayState = Overlay.of(context);
+
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
@@ -168,6 +169,7 @@ class Loading {
         iconPathStream.close();
         widgetStream.close();
         overlay.remove();
+        _controller = null;
         return true;
       },
       update: ({text, iconPath, widget}) {
