@@ -47,14 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 final controller = Loading().show(
                   context: context,
-                  text: "Loading...",
-                  iconPath: 'assets/antinna.svg',
+                  // text: "Loading...",
+                  // iconPath: 'assets/antinna.svg',
                   // widget: Center(child: Text("I am loading"))
                   // Optional: Path to your SVG asset
                   // iconState: IconState
                   //     .rotating, // Optional: Icon state, default is rotating
                 );
-                Future.delayed(Duration(seconds: 1), () {
+                Future.delayed(Duration(seconds: 3), () {
                   controller?.update(
                       widget: Expanded(
                     child: Container(
