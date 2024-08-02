@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'common/widgets/logo/antinna_logo.dart';
+
 typedef CloseLoading = bool Function();
-typedef UpdateLoading = bool Function(
-    {String? text, String? iconPath, Widget? widget});
+typedef UpdateLoading = bool Function({String? text, Widget? widget});
 
 class LoadingController {
   final CloseLoading close;
@@ -49,7 +50,6 @@ class Loading {
   }) {
     if (_controller?.update(
           text: text,
-          iconPath: iconPath,
           widget: widget,
         ) ??
         false) {
@@ -72,7 +72,7 @@ class Loading {
     Widget? widget,
   }) {
     final textStream = BehaviorSubject<String>.seeded(text ?? '');
-    final iconPathStream = BehaviorSubject<String>.seeded(iconPath ?? '');
+    // final iconPathStream = BehaviorSubject<String>.seeded(iconPath ?? '');
     final widgetStream =
         BehaviorSubject<Widget>.seeded(widget ?? const SizedBox.shrink());
     final overlayState = Overlay.of(context);
@@ -101,42 +101,43 @@ class Loading {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              StreamBuilder<String>(
-                                  stream: iconPathStream,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<String> snapshot) {
-                                    if (snapshot.hasData &&
-                                        snapshot.data != '') {
-                                      return AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        // Duration for the gradient change
-                                        curve: Curves.bounceInOut,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.purple,
-                                              Colors.deepPurple
-                                            ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                        ),
-                                        padding:
-                                            EdgeInsets.all(size.width * 0.02),
-                                        child: SvgPicture.asset(
-                                          snapshot.data ??
-                                              'assets/common/icon.svg',
-                                          semanticsLabel: 'Loading...',
-                                          width: size.width * 0.1,
-                                          matchTextDirection: true,
-                                          height: size.height * 0.1,
-                                        ),
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
-                                  }),
+                              AntinnaLogo(size: size.width * 0.1),
+                              // StreamBuilder<String>(
+                              //     stream: iconPathStream,
+                              //     builder: (BuildContext context,
+                              //         AsyncSnapshot<String> snapshot) {
+                              //       if (snapshot.hasData &&
+                              //           snapshot.data != '') {
+                              //         return AnimatedContainer(
+                              //           duration: Duration(milliseconds: 500),
+                              //           // Duration for the gradient change
+                              //           curve: Curves.bounceInOut,
+                              //           decoration: BoxDecoration(
+                              //             shape: BoxShape.circle,
+                              //             gradient: LinearGradient(
+                              //               colors: [
+                              //                 Colors.purple,
+                              //                 Colors.deepPurple
+                              //               ],
+                              //               begin: Alignment.topCenter,
+                              //               end: Alignment.bottomCenter,
+                              //             ),
+                              //           ),
+                              //           padding:
+                              //               EdgeInsets.all(size.width * 0.02),
+                              //           child: SvgPicture.asset(
+                              //             snapshot.data ??
+                              //                 'assets/common/icon.svg',
+                              //             semanticsLabel: 'Loading...',
+                              //             width: size.width * 0.1,
+                              //             matchTextDirection: true,
+                              //             height: size.height * 0.1,
+                              //           ),
+                              //         );
+                              //       } else {
+                              //         return Container();
+                              //       }
+                              //     }),
                               StreamBuilder<String>(
                                   stream: textStream,
                                   builder: (BuildContext context,
@@ -171,15 +172,15 @@ class Loading {
     return LoadingController(
       close: () {
         textStream.close();
-        iconPathStream.close();
+        // iconPathStream.close();
         widgetStream.close();
         overlay.remove();
         _controller = null;
         return true;
       },
-      update: ({text, iconPath, widget}) {
+      update: ({text, widget}) {
         textStream.add(text ?? '');
-        iconPathStream.add(iconPath ?? '');
+        // iconPathStream.add(iconPath ?? '');
         widgetStream.add(widget ?? const SizedBox.shrink());
         return true;
       },

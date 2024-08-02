@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
  <!-- Blue triangle part -->
- <!-- Light blue triangle part -->
- <!-- Dark gray triangle part -->
- <!-- Dark blue triangle part -->
- <!-- Red part -->
- <!-- Orange part -->
- <!-- Yellow part with shadow -->
- <!-- Red part with shadow -->
+ <!-- Light blue triangle part "."-->
+ <!-- Dark gray triangle part "."-->
+ <!-- Dark blue triangle part "."-->
+ <!-- Red part "."-->
+ <!-- Orange part "."-->
+ <!-- Yellow part "."with shadow -->
+ <!-- Red part "."with shadow -->
  <!-- Dark blue triangle part (corrected) -->
  <!-- Green Part where we need to work as its poins are not touching and are not fine -->
  <g class="layer">

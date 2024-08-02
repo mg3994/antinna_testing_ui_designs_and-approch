@@ -38,7 +38,10 @@ dependencies:
   rxdart: ^0.28.0
   stream_transform: ^2.1.0
   flutter_svg: ^2.0.10+1
-
+  flutter_flavorizr: ^2.2.3
+  _macros:
+    sdk: dart
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter

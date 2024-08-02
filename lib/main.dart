@@ -1,11 +1,29 @@
-import 'package:antinna/common/widgets/custom_painter/testhalf.dart';
+library antinna_main;
 
+import 'package:antinna/extensions/log/log.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'app/flavor/flavors.dart';
 
 import 'common/widgets/logo/antinna_logo.dart';
 import 'loading.dart';
 
+// // Import the correct configuration file based on the flavor environment variable
+// import 'app/config_dev.dart'
+//     if (appFlavor == 'dev') 'app/config_stage.dart'
+//     if (appFlavor == 'stage') 'app/config_prod.dart';
+
+// //default should be production wwhich is smply by name app/config.dart
+// // Define an environment variable for the flavor
+// // Define the flavor environment variable
+// const String? appFlavor = String.fromEnvironment('FLUTTER_APP_FLAVOR') != ''
+//     ? String.fromEnvironment('FLUTTER_APP_FLAVOR')
+//     : 'prod';
+
 void main() {
+  final FlavorConfig config = FlavorConfig(appFlavor);
+  config.flavor.name.log();
   runApp(MyApp());
 }
 
@@ -43,7 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Loading Screen Demo'),
       ),
       body: CustomPaint(
-        painter: RPSCustomPainter(),
         size: Size(MediaQuery.sizeOf(context).width,
             MediaQuery.sizeOf(context).height),
         child: Container(
@@ -52,12 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 AntinnaLogo(
+                  duration: Duration(milliseconds: 200),
                   // style: AntinnaLogoStyle.stacked, //will show the text bellow
                   // style: AntinnaLogoStyle.horizontal,
                   textColor: Colors.red,
-                  duration: const Duration(seconds: 4),
 
-                  curve: Curves.bounceIn,
                   size: 50,
                 ),
                 Spacer(),
@@ -97,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     Future.delayed(Duration(seconds: 6), () {
                       controller?.update(
                         text: "Still Loading...",
-                        iconPath: 'assets/antinna.svg',
                       );
                     });
                     // Or without changing the icon, just the text:
