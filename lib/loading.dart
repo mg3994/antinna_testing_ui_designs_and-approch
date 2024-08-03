@@ -101,7 +101,13 @@ class Loading {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              AntinnaLogo(size: size.width * 0.1),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final size = constraints.biggest.width * 0.1;
+                                  return AntinnaLogo(size: size);
+                                },
+                              ),
+
                               // StreamBuilder<String>(
                               //     stream: iconPathStream,
                               //     builder: (BuildContext context,
